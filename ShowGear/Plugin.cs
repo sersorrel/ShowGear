@@ -21,8 +21,10 @@ public sealed class Plugin : IDalamudPlugin
 
     private readonly byte prevTryonValue;
     private readonly byte prevColorantValue;
+    private readonly byte prevMiragePrismMiragePlateValue;
     private static int TryonOffset => 0x2c9;
     private static int ColorantOffset => 0x3a9;
+    private static int MiragePrismMiragePlateOffset => 0x31c;
 
     public unsafe Plugin(
         [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
@@ -43,12 +45,16 @@ public sealed class Plugin : IDalamudPlugin
 
         var colorantAgentAddress = GetColorantAgentAddress();
         prevColorantValue = *(colorantAgentAddress + ColorantOffset);
+        var miragePrismMiragePlateAgentAddress = GetMiragePrismMiragePlateAgentAddress();
+        prevMiragePrismMiragePlateValue = *(miragePrismMiragePlateAgentAddress + MiragePrismMiragePlateOffset);
         Framework.Update += OnFrameworkUpdate;
     }
 
     public unsafe void Dispose()
     {
         Framework.Update -= OnFrameworkUpdate;
+        var miragePrismMiragePlateAgentAddress = GetMiragePrismMiragePlateAgentAddress();
+        *(miragePrismMiragePlateAgentAddress + MiragePrismMiragePlateOffset) = prevMiragePrismMiragePlateValue;
         var colorantAgentAddress = GetColorantAgentAddress();
         *(colorantAgentAddress + ColorantOffset) = prevColorantValue;
 
@@ -73,10 +79,13 @@ public sealed class Plugin : IDalamudPlugin
     private unsafe void OnFrameworkUpdate(DFramework framework)
     {
         // the Item Dyeing popup doesn't persist the Show Gear toggle's state, so we write it every frame
+        // nor does the Plate Selection popup, so we do that one too
         if (Configuration.ManageItemDyeing)
         {
             var colorantAgentAddress = GetColorantAgentAddress();
             *(colorantAgentAddress + ColorantOffset) = 0;
+            var miragePrismMiragePlateAgentAddress = GetMiragePrismMiragePlateAgentAddress();
+            *(miragePrismMiragePlateAgentAddress + MiragePrismMiragePlateOffset) = 0;
         }
     }
 
@@ -88,5 +97,10 @@ public sealed class Plugin : IDalamudPlugin
     private static unsafe byte* GetColorantAgentAddress()
     {
         return (byte*)CSFramework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.Colorant);
+    }
+
+    private static unsafe byte* GetMiragePrismMiragePlateAgentAddress()
+    {
+        return (byte*)CSFramework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.MiragePrismMiragePlate);
     }
 }
