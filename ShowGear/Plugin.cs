@@ -22,9 +22,9 @@ public sealed class Plugin : IDalamudPlugin
     private readonly byte prevTryonValue;
     private readonly byte prevColorantValue;
     private readonly byte prevMiragePrismMiragePlateValue;
-    private static int TryonOffset => 0x2c9;
-    private static int ColorantOffset => 0x3a9;
-    private static int MiragePrismMiragePlateOffset => 0x31c;
+    private static int TryonOffset => 0x2f1; // 753
+    private static int ColorantOffset => 0x3d9; // 985
+    private static int MiragePrismMiragePlateOffset => 0x344; // 836
 
     public unsafe Plugin(
         [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
