@@ -1,5 +1,7 @@
 # ShowGear
 
+[![Download count](https://img.shields.io/endpoint?url=https://qzysathwfhebdai6xgauhz4q7m0mzmrf.lambda-url.us-east-1.on.aws/ShowGear)](https://github.com/sersorrel/ShowGear)
+
 Shows your entire outfit by default in the Fitting Room and Item Dyeing.
 
 ## Usage
