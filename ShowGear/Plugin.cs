@@ -1,20 +1,19 @@
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Interface.Windowing;
+using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
+using JetBrains.Annotations;
 using ShowGear.Windows;
 using CSFramework = FFXIVClientStructs.FFXIV.Client.System.Framework.Framework;
-using DFramework = Dalamud.Game.Framework;
 
 namespace ShowGear;
 
-// ReSharper disable once ClassNeverInstantiated.Global
+[PublicAPI]
 public sealed class Plugin : IDalamudPlugin
 {
-    public string Name => "Show Gear";
-
     private DalamudPluginInterface PluginInterface { get; init; }
-    private DFramework Framework { get; init; }
+    private IFramework Framework { get; init; }
 
     public Configuration Configuration { get; init; }
     public readonly WindowSystem WindowSystem = new("ShowGear");
@@ -28,14 +27,15 @@ public sealed class Plugin : IDalamudPlugin
 
     public unsafe Plugin(
         [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
-        [RequiredVersion("1.0")] DFramework framework)
+        [RequiredVersion("1.0")] IFramework framework)
     {
         PluginInterface = pluginInterface;
         Framework = framework;
 
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
         Configuration.Initialize(PluginInterface);
-        WindowSystem.AddWindow(new ConfigWindow(this));
+        ConfigWindow = new ConfigWindow(this);
+        WindowSystem.AddWindow(ConfigWindow);
         PluginInterface.UiBuilder.Draw += DrawUi;
         PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUi;
 
@@ -49,6 +49,8 @@ public sealed class Plugin : IDalamudPlugin
         prevMiragePrismMiragePlateValue = *(miragePrismMiragePlateAgentAddress + MiragePrismMiragePlateOffset);
         Framework.Update += OnFrameworkUpdate;
     }
+
+    public ConfigWindow ConfigWindow { get; init; }
 
     public unsafe void Dispose()
     {
@@ -73,10 +75,10 @@ public sealed class Plugin : IDalamudPlugin
 
     private void DrawConfigUi()
     {
-        WindowSystem.GetWindow("ShowGear")!.IsOpen = true;
+        ConfigWindow.IsOpen = true;
     }
 
-    private unsafe void OnFrameworkUpdate(DFramework framework)
+    private unsafe void OnFrameworkUpdate(IFramework framework)
     {
         // the Item Dyeing popup doesn't persist the Show Gear toggle's state, so we write it every frame
         // nor does the Plate Selection popup, so we do that one too
