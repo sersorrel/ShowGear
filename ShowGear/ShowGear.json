@@ -2,7 +2,7 @@
   "Author": "ash",
   "Name": "Show Gear",
   "Punchline": "Shows your gear in the Fitting Room by default.",
-  "Description": "Normally the Fitting Room defaults to showing you just the piece of gear you’re trying on. This plugin inverts that behaviour: when you launch the game, the Fitting Room (plus Item Dyeing and Glamour Plate Selection) will show all your gear by default.\n\nNB: there are some oddities to how Item Dyeing and Glamour Plate Selection behave when this plugin is doing its thing. If you’d rather it not touch those windows at all, there’s an option for that (and more details about the problem) in the settings.",
+  "Description": "Normally the Fitting Room defaults to showing you just the piece of gear you’re trying on. This plugin inverts that behaviour: when you launch the game, the Fitting Room (plus Item Dyeing and Glamour Plate Selection) will show all your gear by default.\n\nNB: there are some oddities to how Item Dyeing and Glamour Plate Selection behave when this plugin is doing its thing. If you’d rather it not touch those windows at all, there’s an option for that (and more details about the problem) in the settings.\n\nIcon adapted from OpenMoji, CC BY-SA 4.0.",
   "InternalName": "ShowGear",
   "ApplicableVersion": "any"
 }
